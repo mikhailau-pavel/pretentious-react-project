@@ -4,8 +4,9 @@ import {
   SearchResult,
   Planet,
   TopBarState,
-} from '../../types/componentTypes.tsx';
+} from '../../types/componentTypes';
 import './TopBar.css'
+import React from 'react';
 
 class TopBar extends Component<TopBarProps, TopBarState> {
   state = {

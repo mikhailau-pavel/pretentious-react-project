@@ -1,7 +1,8 @@
-import { Component } from "react";
-import TopBar from "../TopBar/TopBar";
-import Results from "../Results/Results";
-import { Planet } from "../../types/componentTypes";
+import { Component } from 'react';
+import TopBar from '../TopBar/TopBar';
+import Results from '../Results/Results';
+import { Planet } from '../../types/componentTypes';
+import FakeErrorButton from '../FakeErrorButton/FakeError';
 
 class MainPage extends Component {
   state = { dataValue: [] };
@@ -14,6 +15,7 @@ class MainPage extends Component {
     return (
       <div className="main-page-container">
         <TopBar changeValueFunction={this.setNewState} />
+        <FakeErrorButton />
         <Results arrayOfPlanets={this.state.dataValue} />
       </div>
     );

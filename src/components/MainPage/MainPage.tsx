@@ -3,7 +3,6 @@ import TopBar from '../TopBar/TopBar';
 import Results from '../Results/Results';
 import { Planet } from '../../types/componentTypes';
 import FakeErrorButton from '../FakeErrorButton/FakeError';
-import React from 'react';
 
 class MainPage extends Component {
   state = { dataValue: [] };

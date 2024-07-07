@@ -2,7 +2,6 @@ import { Component, ReactNode } from 'react';
 import './App.css';
 import MainPage from './components/MainPage/MainPage';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-import React from 'react';
 
 class App extends Component {
   render(): ReactNode {

@@ -1,4 +1,3 @@
-import React from "react";
 import { Component, ReactNode } from "react";
 
 class FakeErrorButton extends Component {
@@ -20,3 +19,4 @@ class FakeErrorButton extends Component {
 
 }
 export default FakeErrorButton
+

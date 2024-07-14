@@ -1,52 +1,62 @@
-import { Component } from 'react';
-import {
-  TopBarProps,
-  SearchResult,
-  Planet,
-  TopBarState,
-} from '../../types/componentTypes';
-import './TopBar.css'
-import React from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import './TopBar.css';
+import { TopBarProps, SearchResult, Planet } from "../../types/componentTypes";
 
-class TopBar extends Component<TopBarProps, TopBarState> {
-  state = {
-    inputValue: localStorage.getItem('request') || '',
+const TopBar: FC<TopBarProps> = (props) => {
+  const { changeValueFunction, changeLogStatus, setItems, setURLParams, page } = props;
+  const [inputValue, setInputValue] = useState<string>(localStorage.getItem('request') || '');
+
+  const changeValueFunctionRef = useRef(changeValueFunction);
+  const changeLogStatusRef = useRef(changeLogStatus);
+  const setItemsRef = useRef(setItems);
+
+  useEffect(() => {
+    changeValueFunctionRef.current = changeValueFunction;
+    changeLogStatusRef.current = changeLogStatus;
+    setItemsRef.current = setItems;
+  }, [changeValueFunction, changeLogStatus, setItems]);
+
+  const changeInputHandle = (event: React.FormEvent<HTMLInputElement>) => {
+    setInputValue(event.currentTarget.value);
   };
 
-  changeInputHandle = (event: React.FormEvent<HTMLInputElement>) => {
-    this.setState({ inputValue: event.currentTarget.value });
+  const buttonClickHandle = () => {
+    localStorage.setItem('request', inputValue);
+    if (page !== "1") {
+      setURLParams({ page: "1" });
+      return;
+    }
+    getData(page);
   };
 
-  buttonClickHandle = () => {
-    localStorage.setItem('request', this.state.inputValue);
-    this.getData();
-  };
-
-  async getData() {
-    const storedInput: string = localStorage.getItem('request') || '';
+  const getData = useCallback(async (page?: string) => {
+    changeLogStatusRef.current(true);
+    const pageNumber = page ? `&page=${page}` : "";
     const response: Response = await fetch(
-      `https://swapi.dev/api/planets/?search=${storedInput}`
+      `https://swapi.dev/api/planets/?search=${inputValue}${pageNumber}`
     );
     const searchResponse: SearchResult = await response.json();
     const data: Planet[] = searchResponse.results;
-    this.props.changeValueFunction(data);
-  }
+    changeValueFunctionRef.current(data);
+    setItemsRef.current(searchResponse.count);
+    console.log(data);
+    changeLogStatusRef.current(false);
+  }, [inputValue]);
 
-  componentDidMount(): void {
-    this.getData();
-  }
-  render() {
-    return (
-      <div className='top-bar-wrapper'>
-        <input
-          type="text"
-          value={this.state.inputValue}
-          onChange={this.changeInputHandle}
-        />
-        <button onClick={this.buttonClickHandle}>Click</button>
-      </div>
-    );
-  }
+  useEffect(() => {
+    getData(page);
+  }, [getData, page]);
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={inputValue}
+        onChange={changeInputHandle}
+      />
+      <button onClick={buttonClickHandle}>Click</button>
+    </div>
+  );
 }
 
 export default TopBar;

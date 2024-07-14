@@ -1,18 +1,30 @@
-import { Component, ReactNode } from 'react';
+import {FC, useState} from 'react';
 import './App.css';
 import MainPage from './components/MainPage/MainPage';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import PlanetSite from './components/PlanetCard/PlanetCard';
+import Page404 from './components/Page404/Page404';
 
-class App extends Component {
-  render(): ReactNode {
-    return (
-      <>
-        <ErrorBoundary fallback={<p>Hyperdrive Failure. Tap F5 Chewie!</p>}>
-          <MainPage />
-        </ErrorBoundary>
-      </>
-    );
-  }
+const App: FC = () => {
+  const [isPanelExpand, setPanelAppear] = useState(false);
+  return (
+    <>
+    <Routes>
+          <Route
+            path="/"
+            element={
+              <MainPage isPanelExpand={isPanelExpand} setPanelAppear={setPanelAppear} />
+            }
+          >
+            <Route
+              path="/detail/:id"
+              element={<PlanetSite setPanelAppear={setPanelAppear} />}
+            />
+          </Route>
+          <Route path="*" element={<Page404 />} />
+        </Routes>
+     
+    </>
+  );
 }
 export default App;
